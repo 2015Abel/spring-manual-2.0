@@ -1,5 +1,7 @@
 package com.demo.abel.framework.servlet;
 
+import com.demo.abel.framework.core.ApplicationContext;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -31,6 +33,8 @@ public class DispatcherServlet extends HttpServlet {
         config.getServletContext();
 
         //定位
+        ApplicationContext context = new ApplicationContext(config);
 
+        context.refresh();
     }
 }

@@ -10,7 +10,7 @@
     <servlet-class></servlet-class>
     <load-on-startup>1</load-on-startup>
     <init-param>
-      <param-name>propertiesUrl</param-name>
+      <param-name>propertyPath</param-name>
       <param-value>classpath:application.properties</param-value>
     </init-param>
   </servlet>

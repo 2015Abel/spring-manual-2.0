@@ -1,4 +1,4 @@
-package com.demo.abel.framework.core;
+package com.demo.abel.framework.core.service;
 
 /**
  * @description: BeanFactory
