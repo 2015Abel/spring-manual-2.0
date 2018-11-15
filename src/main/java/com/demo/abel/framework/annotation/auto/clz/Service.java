@@ -1,4 +1,4 @@
-package com.demo.abel.framework.annotation;
+package com.demo.abel.framework.annotation.auto.clz;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

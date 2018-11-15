@@ -1,5 +1,8 @@
 package com.demo.abel.framework.servlet;
 
+import com.demo.abel.business.controller.UserController;
+import com.demo.abel.business.service.UserService;
+import com.demo.abel.business.service.impl.UserServiceImpl;
 import com.demo.abel.framework.core.ApplicationContext;
 
 import javax.servlet.ServletConfig;
@@ -25,16 +28,20 @@ public class DispatcherServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPost(req, resp);
+
     }
 
     @Override
     public void init() throws ServletException {
-        config.getServletContext();
+        config = getServletConfig();
 
-        //定位
         ApplicationContext context = new ApplicationContext(config);
 
-        context.refresh();
+        UserService userService = (UserService) context.getBean("aliasUserService");
+        userService.readABook();
+        UserServiceImpl uImpl = (UserServiceImpl) context.getBean("userService");
+        UserServiceImpl wImpl = (UserServiceImpl) context.getBean("workService");
+        UserController userController = (UserController) context.getBean("userController");
+        System.out.println();
     }
 }

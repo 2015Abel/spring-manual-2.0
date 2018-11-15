@@ -6,4 +6,8 @@ package com.demo.abel.framework.constant;
 public interface AbelConstants {
     String PROPERTY_PATH = "propertyPath";
     String IGNORE_PREFIX = "classpath:";
+
+    String ROOT_PATH = "root.path";
+    String TYPE_SUFFIX = ".class";
+
 }
