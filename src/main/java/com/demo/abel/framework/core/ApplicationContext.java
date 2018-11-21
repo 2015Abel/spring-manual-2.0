@@ -24,7 +24,5 @@ public class ApplicationContext extends AbstractApplicationContext{
         }
 
         refresh();
-
-
     }
 }

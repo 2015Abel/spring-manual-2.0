@@ -1,8 +1,5 @@
 package com.demo.abel.framework.servlet;
 
-import com.demo.abel.business.controller.UserController;
-import com.demo.abel.business.service.UserService;
-import com.demo.abel.business.service.impl.UserServiceImpl;
 import com.demo.abel.framework.core.ApplicationContext;
 
 import javax.servlet.ServletConfig;
@@ -37,11 +34,34 @@ public class DispatcherServlet extends HttpServlet {
 
         ApplicationContext context = new ApplicationContext(config);
 
-        UserService userService = (UserService) context.getBean("aliasUserService");
-        userService.readABook();
-        UserServiceImpl uImpl = (UserServiceImpl) context.getBean("userService");
-        UserServiceImpl wImpl = (UserServiceImpl) context.getBean("workService");
-        UserController userController = (UserController) context.getBean("userController");
-        System.out.println();
+        /**
+         * IOC 测试
+         */
+//        UserService userService = (UserService) context.getBean("aliasUserService");
+//        userService.readABook();
+//        UserServiceImpl uImpl = (UserServiceImpl) context.getBean("userService");
+//        UserServiceImpl wImpl = (UserServiceImpl) context.getBean("workService");
+//        UserController userController = (UserController) context.getBean("userController");
+
+        initStrategies(context);
+    }
+
+    /**
+     * 初始化3大组件
+     * @param context
+     */
+    protected void initStrategies(ApplicationContext context){
+        initHandlerMappings(context);
+        initHandlerAdapters(context);
+        initViewResolvers(context);
+    }
+
+    private void initViewResolvers(ApplicationContext context) {
+    }
+
+    private void initHandlerAdapters(ApplicationContext context) {
+    }
+
+    private void initHandlerMappings(ApplicationContext context) {
     }
 }
