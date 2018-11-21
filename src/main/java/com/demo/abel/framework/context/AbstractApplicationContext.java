@@ -1,21 +1,22 @@
-package com.demo.abel.framework.core;
+package com.demo.abel.framework.context;
 
 import com.demo.abel.framework.annotation.Autowire;
 import com.demo.abel.framework.annotation.Qualifier;
 import com.demo.abel.framework.annotation.auto.clz.Controller;
 import com.demo.abel.framework.annotation.auto.clz.Repository;
 import com.demo.abel.framework.annotation.auto.clz.Service;
-import com.demo.abel.framework.bean.BeanDefinition;
-import com.demo.abel.framework.bean.BeanWrapper;
+import com.demo.abel.framework.context.bean.BeanDefinition;
+import com.demo.abel.framework.context.bean.BeanWrapper;
 import com.demo.abel.framework.constant.AbelConstants;
-import com.demo.abel.framework.core.handler.BeanDefinitionReader;
-import com.demo.abel.framework.core.service.BeanFactory;
+import com.demo.abel.framework.context.service.BeanFactory;
+import com.demo.abel.framework.context.support.BeanDefinitionReader;
 import com.demo.abel.framework.util.StringUtil;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
@@ -33,6 +34,18 @@ public abstract class AbstractApplicationContext implements BeanFactory {
     private final Map<String, BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<>(256);
     private final ConcurrentMap<String, BeanWrapper> beanWrapperMap = new ConcurrentHashMap<>();
     private final Map<String, Object> singletonObjects = new ConcurrentHashMap<>(256);
+
+    @Override
+    public List<String> getBeanNamesForType(Class<?> clz){
+        List<String> beanNames = new LinkedList<>();
+        for(Map.Entry<String,BeanWrapper> entry:beanWrapperMap.entrySet()){
+            BeanWrapper beanWrapper = entry.getValue();
+            if(clz.isInstance(beanWrapper.getWrappedInstance())){
+                beanNames.add(entry.getKey());
+            }
+        }
+        return beanNames;
+    }
 
     @Override
     public Object getBean(String name) {

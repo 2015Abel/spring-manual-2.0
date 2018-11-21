@@ -1,6 +1,6 @@
 package com.demo.abel.framework.servlet;
 
-import com.demo.abel.framework.core.ApplicationContext;
+import com.demo.abel.framework.context.AnnotationApplicationContext;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -32,7 +32,7 @@ public class DispatcherServlet extends HttpServlet {
     public void init() throws ServletException {
         config = getServletConfig();
 
-        ApplicationContext context = new ApplicationContext(config);
+        AnnotationApplicationContext context = new AnnotationApplicationContext(config);
 
         /**
          * IOC 测试
@@ -50,18 +50,18 @@ public class DispatcherServlet extends HttpServlet {
      * 初始化3大组件
      * @param context
      */
-    protected void initStrategies(ApplicationContext context){
+    protected void initStrategies(AnnotationApplicationContext context){
         initHandlerMappings(context);
         initHandlerAdapters(context);
         initViewResolvers(context);
     }
 
-    private void initViewResolvers(ApplicationContext context) {
+    private void initViewResolvers(AnnotationApplicationContext context) {
     }
 
-    private void initHandlerAdapters(ApplicationContext context) {
+    private void initHandlerAdapters(AnnotationApplicationContext context) {
     }
 
-    private void initHandlerMappings(ApplicationContext context) {
+    private void initHandlerMappings(AnnotationApplicationContext context) {
     }
 }

@@ -1,4 +1,6 @@
-package com.demo.abel.framework.core.service;
+package com.demo.abel.framework.context.service;
+
+import java.util.List;
 
 /**
  * @description: BeanFactory
@@ -7,4 +9,5 @@ package com.demo.abel.framework.core.service;
  **/
 public interface BeanFactory {
     Object getBean(String name);
+    List<String> getBeanNamesForType(Class<?> clz);
 }

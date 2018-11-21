@@ -1,4 +1,4 @@
-package com.demo.abel.framework.bean;
+package com.demo.abel.framework.context.bean;
 
 /**
  * @description: instance上的又一层包装，提供代理

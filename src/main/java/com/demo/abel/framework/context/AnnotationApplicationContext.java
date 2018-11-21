@@ -1,4 +1,4 @@
-package com.demo.abel.framework.core;
+package com.demo.abel.framework.context;
 
 import com.demo.abel.framework.constant.AbelConstants;
 
@@ -11,9 +11,9 @@ import java.io.InputStream;
  * @author: liuzijian
  * @create: 2018-11-13 23:40
  **/
-public class ApplicationContext extends AbstractApplicationContext{
+public class AnnotationApplicationContext extends AbstractApplicationContext{
 
-    public ApplicationContext(ServletConfig servletConfig) {
+    public AnnotationApplicationContext(ServletConfig servletConfig) {
         //定位
         String propertyPath = servletConfig.getInitParameter(AbelConstants.PROPERTY_PATH);
         InputStream is = getClass().getClassLoader().getResourceAsStream(propertyPath.replace(AbelConstants.IGNORE_PREFIX,""));

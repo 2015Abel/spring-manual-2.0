@@ -1,4 +1,4 @@
-package com.demo.abel.framework.bean;
+package com.demo.abel.framework.context.bean;
 
 import lombok.Getter;
 
