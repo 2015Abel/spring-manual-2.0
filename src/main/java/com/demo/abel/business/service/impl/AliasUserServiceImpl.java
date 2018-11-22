@@ -7,8 +7,6 @@ import com.demo.abel.business.service.UserService;
 import com.demo.abel.framework.annotation.Autowire;
 import com.demo.abel.framework.annotation.auto.clz.Service;
 
-import java.util.Random;
-
 /**
  * @description: AliasUserServiceImpl
  * @author: liuzijian
@@ -21,8 +19,7 @@ public class AliasUserServiceImpl implements UserService {
     private BookRepository bookRepository;
 
     @Override
-    public boolean readABook() {
-        long bookId = new Random().nextInt(3);
+    public boolean readABook(Long bookId) {
         BookEntity bookEntity = bookRepository.queryById(bookId);
         if(bookEntity!=null){
             System.out.println("开始读书："+JSON.toJSONString(bookEntity));

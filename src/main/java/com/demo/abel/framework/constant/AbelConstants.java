@@ -10,4 +10,6 @@ public interface AbelConstants {
     String ROOT_PATH = "root.path";
     String TYPE_SUFFIX = ".class";
 
+    String URL_PREFIX = "/";
+
 }

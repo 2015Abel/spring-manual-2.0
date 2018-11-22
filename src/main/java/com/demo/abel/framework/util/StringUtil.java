@@ -17,4 +17,5 @@ public class StringUtil {
         }
         return firstLetter+param.substring(1);
     }
+
 }
