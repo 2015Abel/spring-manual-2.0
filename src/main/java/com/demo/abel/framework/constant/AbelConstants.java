@@ -11,5 +11,5 @@ public interface AbelConstants {
     String TYPE_SUFFIX = ".class";
 
     String URL_PREFIX = "/";
-
+    String TEMPLATE_PATH = "template.path";
 }

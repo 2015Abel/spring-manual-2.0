@@ -1,6 +1,5 @@
 package com.demo.abel.business.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.demo.abel.business.dao.BookRepository;
 import com.demo.abel.business.domain.BookEntity;
 import com.demo.abel.business.service.UserService;
@@ -19,13 +18,14 @@ public class AliasUserServiceImpl implements UserService {
     private BookRepository bookRepository;
 
     @Override
-    public boolean readABook(Long bookId) {
+    public String speakBookName(Long bookId) {
+        String bookName;
         BookEntity bookEntity = bookRepository.queryById(bookId);
         if(bookEntity!=null){
-            System.out.println("开始读书："+JSON.toJSONString(bookEntity));
+            bookName =  bookEntity.getName();
         }else {
-            System.out.println("i hava not book : id="+bookId);
+            bookName = null;
         }
-        return bookEntity!=null;
+        return bookName;
     }
 }

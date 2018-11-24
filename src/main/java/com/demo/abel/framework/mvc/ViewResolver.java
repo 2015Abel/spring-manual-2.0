@@ -5,7 +5,7 @@ package com.demo.abel.framework.mvc;
  * @author: liuzijian
  * @date: 2018-11-22 11:18
  */
-public class ModelAndViewContainer {
+public class ViewResolver {
     private WebServletRequest webServletRequest;
     private String viewName;
 }

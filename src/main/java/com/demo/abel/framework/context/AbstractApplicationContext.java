@@ -176,4 +176,8 @@ public abstract class AbstractApplicationContext implements BeanFactory {
         return collection;
     }
 
+    public String getConfigProperty(String key){
+        return config.getProperty(key);
+    }
+
 }

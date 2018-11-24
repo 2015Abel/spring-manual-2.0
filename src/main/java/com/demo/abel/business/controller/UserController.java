@@ -7,12 +7,13 @@ import com.demo.abel.framework.annotation.mvc.RequestMapping;
 import com.demo.abel.framework.annotation.auto.clz.Controller;
 import com.demo.abel.framework.annotation.Qualifier;
 import com.demo.abel.framework.annotation.mvc.RequestParam;
+import com.demo.abel.framework.mvc.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * @description: UserController
+ * @description: UserController TODO
  * @author: liuzijian
  * @create: 2018-11-15 10:13
  **/
@@ -28,6 +29,11 @@ public class UserController {
     public Object doSomething(@RequestParam("actionType")String actionType,
                               @RequestParam("linkId")Long bookId,
                               HttpServletRequest request, HttpServletResponse response){
+        return null;
+    }
+
+    @RequestMapping(url = "toHello")
+    public ModelAndView toHello(){
         return null;
     }
 

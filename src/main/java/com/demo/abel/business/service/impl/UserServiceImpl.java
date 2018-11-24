@@ -13,7 +13,7 @@ import com.demo.abel.framework.annotation.auto.clz.Service;
 public class UserServiceImpl implements UserService,WorkService {
 
     @Override
-    public boolean readABook(Long bookId) {
-        return false;
+    public String speakBookName(Long bookId) {
+        return null;
     }
 }

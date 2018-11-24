@@ -11,6 +11,10 @@ import java.util.Map;
 public class HandlerAdapter {
     private final Map<String,Integer> paramPositionMap = new HashMap<>();
 
+    public void setPosition(String paramName,int location){
+        paramPositionMap.put(paramName,location);
+    }
+
     public void handle(){
 
     }

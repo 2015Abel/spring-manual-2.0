@@ -2,19 +2,30 @@ package com.demo.abel.framework.servlet;
 
 import com.demo.abel.framework.annotation.auto.clz.Controller;
 import com.demo.abel.framework.annotation.mvc.RequestMapping;
+import com.demo.abel.framework.annotation.mvc.RequestParam;
 import com.demo.abel.framework.constant.AbelConstants;
 import com.demo.abel.framework.context.AbstractApplicationContext;
 import com.demo.abel.framework.context.AnnotationApplicationContext;
+import com.demo.abel.framework.mvc.HandlerAdapter;
 import com.demo.abel.framework.mvc.HandlerMapping;
+import com.demo.abel.framework.mvc.ModelAndView;
+import com.demo.abel.framework.util.CollectionUtils;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -25,7 +36,10 @@ import java.util.regex.Pattern;
 public class DispatcherServlet extends HttpServlet {
 
     ServletConfig config;
+
     List<HandlerMapping> handlerMappings = new LinkedList<>();
+    Map<HandlerMapping,HandlerAdapter> handlerAdapters = new HashMap<>();
+    Map<String,ModelAndView> viewResolvers = new HashMap<>();
 
 
     @Override
@@ -66,6 +80,10 @@ public class DispatcherServlet extends HttpServlet {
         initViewResolvers(context);
     }
 
+    /**
+     * 初始化handlerMappings，关联url至类和方法
+     * @param context
+     */
     private void initHandlerMappings(AbstractApplicationContext context) {
         List<String> beanNames = context.getBeanNamesForType(Object.class);
         for(String name:beanNames){
@@ -74,29 +92,85 @@ public class DispatcherServlet extends HttpServlet {
                 continue;
             }
 
-            RequestMapping requestMapping = bean.getClass().getAnnotation(RequestMapping.class);
-            if(requestMapping==null){
-                //TODO 简易版，暂时如此
-                throw new RuntimeException("controller 必须被 @RequestMapping修饰！");
+            RequestMapping controllerUrlAnnotation = bean.getClass().getAnnotation(RequestMapping.class);
+            String controllerUrl;
+            if(controllerUrlAnnotation==null){
+                controllerUrl = AbelConstants.URL_PREFIX;
+            }else {
+                controllerUrl = controllerUrlAnnotation.url();
             }
 
-            String url = requestMapping.url();
-            if(!url.startsWith(AbelConstants.URL_PREFIX)){
-                url+=AbelConstants.URL_PREFIX;
+            if(!controllerUrl.startsWith(AbelConstants.URL_PREFIX)){
+                controllerUrl = AbelConstants.URL_PREFIX + controllerUrl;
+            }
+            if(!controllerUrl.endsWith(AbelConstants.URL_PREFIX)){
+                controllerUrl = controllerUrl + AbelConstants.URL_PREFIX;
             }
 
             HandlerMapping handlerMapping = new HandlerMapping();
-            handlerMapping.setUrl(Pattern.compile(url+"*"));
-            handlerMapping.setController(bean);
-            //TODO method map
 
+            handlerMapping.setUrl(Pattern.compile(controllerUrl+"(*)"));
+            handlerMapping.setController(bean);
+            //method map
+            Map<String,Method> methodMap = new HashMap<>();
+            Method[] methods = bean.getClass().getMethods();
+            for(Method method:methods){
+                RequestMapping methodUrlAnnotation = method.getAnnotation(RequestMapping.class);
+                if(methodUrlAnnotation==null){
+                    continue;
+                }
+
+                String url = methodUrlAnnotation.url();
+                methodMap.put(url,method);
+            }
+            handlerMapping.setMethodMap(methodMap);
+            handlerMappings.add(handlerMapping);
         }
     }
 
+    /**
+     * 初始化handlerAdapters，方法参数定位
+     * xxx?b=xxb&a=xxa
+     * @param context
+     */
     private void initHandlerAdapters(AbstractApplicationContext context) {
+        for(HandlerMapping hm:handlerMappings){
+            if(CollectionUtils.isEmpty(hm.getMethodMap())){
+                continue;
+            }
+            for(Method method:hm.getMethodMap().values()){
+                Parameter[] pms = method.getParameters();
+                if(pms==null || pms.length==0){
+                    continue;
+                }
+
+                HandlerAdapter handlerAdapter = new HandlerAdapter();
+                for (int i=0,len=pms.length;i<len;i++){
+                    if(pms[i].getType() == HttpServletRequest.class || pms[i].getType() == HttpServletResponse.class){
+                        handlerAdapter.setPosition(pms[i].getType().getSimpleName(),i);
+                        continue;
+                    }
+
+                    RequestParam requestParam;
+                    if ((requestParam = pms[i].getAnnotation(RequestParam.class))!=null){
+                        handlerAdapter.setPosition(requestParam.value(),i);
+                    }else {
+                        //只支持 @RequestParam 参数绑定
+                        throw new RuntimeException("The parameter of controller method need to annotationed by @RequestParam!");
+                    }
+                }
+                handlerAdapters.put(hm,handlerAdapter);
+            }
+        }
     }
 
     private void initViewResolvers(AbstractApplicationContext context) {
-
+        String templatePath = context.getConfigProperty(AbelConstants.TEMPLATE_PATH);
+        try {
+            URI uri = getClass().getClassLoader().getResource(templatePath).toURI();
+            File template = new File(uri);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
     }
 }
