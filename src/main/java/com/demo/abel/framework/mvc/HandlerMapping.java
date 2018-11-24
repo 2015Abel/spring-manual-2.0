@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.lang.reflect.Method;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -17,5 +16,5 @@ import java.util.regex.Pattern;
 public class HandlerMapping{
     private Pattern url;
     private Object controller;
-    private Map<String,Method> methodMap;
+    private Method method;
 }

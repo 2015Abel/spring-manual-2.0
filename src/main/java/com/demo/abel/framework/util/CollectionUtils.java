@@ -14,6 +14,6 @@ public class CollectionUtils {
     }
 
     public static boolean isEmpty(Map map){
-        return map!=null && map.size()>0;
+        return map==null || map.size()==0;
     }
 }

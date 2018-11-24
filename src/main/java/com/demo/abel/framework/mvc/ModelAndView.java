@@ -1,6 +1,6 @@
 package com.demo.abel.framework.mvc;
 
-import java.io.File;
+import java.util.Map;
 
 /**
  * @description: TODO 类描述
@@ -8,6 +8,7 @@ import java.io.File;
  * @create: 2018-11-22 22:56
  **/
 public class ModelAndView {
-    private File viewFile;
+    private WebServletRequest servletRequest;
     private String viewName;
+    private Map<String,Object> model;
 }

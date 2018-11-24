@@ -9,13 +9,15 @@ import java.util.Map;
  * @date: 2018-11-22 11:05
  */
 public class HandlerAdapter {
+
     private final Map<String,Integer> paramPositionMap = new HashMap<>();
 
     public void setPosition(String paramName,int location){
         paramPositionMap.put(paramName,location);
     }
 
-    public void handle(){
-
+    public ModelAndView handle(WebServletRequest webRequest){
+        //TODO 方法实际执行
+        return null;
     }
 }
