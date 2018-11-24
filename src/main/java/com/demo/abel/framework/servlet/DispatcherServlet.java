@@ -8,8 +8,8 @@ import com.demo.abel.framework.context.AbstractApplicationContext;
 import com.demo.abel.framework.context.AnnotationApplicationContext;
 import com.demo.abel.framework.mvc.HandlerAdapter;
 import com.demo.abel.framework.mvc.HandlerMapping;
+import com.demo.abel.framework.mvc.ModelAndView;
 import com.demo.abel.framework.mvc.ViewResolver;
-import com.demo.abel.framework.mvc.WebServletRequest;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.net.URI;
@@ -51,7 +52,6 @@ public class DispatcherServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String requestPath = req.getRequestURI();
-        String params = req.getQueryString();
 
         HandlerMapping handlerMapping = getHandlerMapping(requestPath);
         if(handlerMapping==null){
@@ -60,7 +60,18 @@ public class DispatcherServlet extends HttpServlet {
 
         HandlerAdapter handlerAdapter = getHandlerAdapter(handlerMapping);
 
-        handlerAdapter.handle(new WebServletRequest(req,resp));
+        ModelAndView mv = handlerAdapter.handle(req,resp,handlerMapping);
+        String viewName = mv.getViewName();
+        ViewResolver viewResolver = viewResolvers.get(viewName);
+        if(viewResolver==null){
+            throw new RuntimeException("can not find any view resolver named `"+viewName+"`");
+        }
+
+        String result = viewResolver.resolve(mv);
+        PrintWriter writer = resp.getWriter();
+        writer.write(result);
+        writer.flush();
+        writer.close();
     }
 
     private HandlerAdapter getHandlerAdapter(HandlerMapping handlerMapping){
@@ -186,12 +197,14 @@ public class DispatcherServlet extends HttpServlet {
         }
     }
 
+    private String templatePath;
+
     /**
      * 初始化视图
      * @param context
      */
     private void initViewResolvers(AbstractApplicationContext context) {
-        String templatePath = context.getConfigProperty(AbelConstants.TEMPLATE_PATH);
+        templatePath = context.getConfigProperty(AbelConstants.TEMPLATE_PATH);
         initViewResolves(templatePath);
     }
 
@@ -212,7 +225,12 @@ public class DispatcherServlet extends HttpServlet {
                     ViewResolver vr = new ViewResolver();
                     vr.setTemplate(file);
                     vr.setViewName(file.getName());
-                    vr.setFullPath(path + AbelConstants.URL_PREFIX + file.getName());
+                    String fullPath = path + AbelConstants.URL_PREFIX + file.getName();
+                    fullPath = fullPath.replace(templatePath,"");
+                    if(fullPath.startsWith(AbelConstants.URL_PREFIX)){
+                        fullPath = fullPath.substring(1);
+                    }
+                    vr.setFullPath(fullPath);
                     viewResolvers.put(vr.getFullPath(),vr);
                 }
             }
